@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Management;
 using SentinelSyncV1;
@@ -23,6 +23,31 @@ namespace SentinelSyncV1
 
             return roundVal + " %";
         }
+
+        static void RefreshRamInfos()
+        {
+            Console.WriteLine("available : " + SentinelSyncV1.SystemInfo.FormatSize(SentinelSyncV1.SystemInfo.GetAvailPhys()));
+            Console.WriteLine("used : " + SentinelSyncV1.SystemInfo.FormatSize(SentinelSyncV1.SystemInfo.GetUsedPhys()));
+            Console.WriteLine("total : " + SentinelSyncV1.SystemInfo.FormatSize(SentinelSyncV1.SystemInfo.GetTotalPhys()));
+        }
+        /*
+        static string getRamCounter()
+        {
+            PerformanceCounter ramCounter = new PerformanceCounter();
+            ramCounter.CategoryName = "Memory";
+            ramCounter.CounterName = "Available MBytes";
+
+            dynamic firstValue = ramCounter.NextValue();
+            System.Threading.Thread.Sleep(100);
+            dynamic val = ramCounter.NextValue();
+
+            decimal roundVar = Convert.ToDecimal(val);
+            roundVar = Math.Round(roundVar, 2);
+
+            return roundVar.ToString();
+        }
+        */
+
         static void GetAllSystemInfos()
         {
             var si = new SystemInfo();
@@ -43,14 +68,28 @@ namespace SentinelSyncV1
                 Console.WriteLine("(ENTER to stop) processor utilisation : " + RefreshCpuInfos());
             }
         }
-        
+
+        static void ShowRamUse()
+        {
+            while (true)
+            {
+                if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter)
+                {
+                    return;
+                }
+                Console.WriteLine("(ENTER to stop) RAM utilisation : ");
+                RefreshRamInfos();
+                System.Threading.Thread.Sleep(500);
+            }
+        }
+
         static void Main(string[] args)
         {
             GetAllSystemInfos();
             int choice = 0;
 
             Console.WriteLine("1 - show processor utilisation");
-            Console.WriteLine("2 - show RAM utilisation");
+            Console.WriteLine("2 - show RAM");
             Console.WriteLine("3 - show PC temperature");
             Console.WriteLine("4 - show stockage infos");
             Console.WriteLine("5 - connexion infos");
@@ -62,7 +101,7 @@ namespace SentinelSyncV1
                     ShowCpuUse();
                     break;
                 case 2:
-
+                    ShowRamUse();
                     break;
                 case 3:
 

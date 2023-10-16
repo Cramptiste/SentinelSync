@@ -2,6 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Management;
 using SentinelSyncV1;
+using System.Threading.Tasks;
+using System.Threading.Channels;
+using Microsoft.Win32;
+using System.Management;
+using System.Runtime.InteropServices;
+using System.Management;
 
 namespace SentinelSyncV1
 {
@@ -48,6 +54,37 @@ namespace SentinelSyncV1
         }
         */
 
+        static void RefreshTempInfos()
+        {
+            try
+            {
+                double temperature = 0;
+                string instanceName = "";
+
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\cimv2", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
+
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    temperature = Convert.ToDouble(obj["CurrentTemperature"].ToString());
+                    temperature = (temperature - 2732) / 10.0;
+                    instanceName = obj["InstanceName"].ToString();
+                }
+
+                Console.WriteLine(temperature + "°C");
+            }
+            catch (ManagementException e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+
+
+
+
         static void GetAllSystemInfos()
         {
             var si = new SystemInfo();
@@ -82,6 +119,19 @@ namespace SentinelSyncV1
                 System.Threading.Thread.Sleep(500);
             }
         }
+        static void ShowTemp()
+        {
+            while (true)
+            {
+                if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter)
+                {
+                    return;
+                }
+                Console.WriteLine("(ENTER to stop) Temperature : ");
+                RefreshTempInfos();
+                System.Threading.Thread.Sleep(500);
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -104,7 +154,7 @@ namespace SentinelSyncV1
                     ShowRamUse();
                     break;
                 case 3:
-
+                    ShowTemp();
                     break;
                 case 4:
 

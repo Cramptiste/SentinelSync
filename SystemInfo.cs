@@ -11,6 +11,8 @@ namespace SentinelSyncV1
 {
     public class SystemInfo
     {
+        public static object System { get; internal set; }
+
         // getting OS informations
         public string GetOsInfos(string param)
         {
@@ -32,6 +34,7 @@ namespace SentinelSyncV1
             }
             return "";
         }
+
         // getting CPU infos
         public string GetCpuInfos()
         {
@@ -66,7 +69,6 @@ namespace SentinelSyncV1
                 }
             }
         }
-
 
 
         #region specificals functions about RAM
@@ -132,6 +134,8 @@ namespace SentinelSyncV1
         }
         #endregion
 
+        
     }
+    
 
 }

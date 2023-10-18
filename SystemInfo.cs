@@ -6,6 +6,8 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace SentinelSyncV1
 {
@@ -69,6 +71,37 @@ namespace SentinelSyncV1
                 }
             }
         }
+
+        public void GetDrivesInfos()
+        {
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            List<Disk> disks = new List<Disk>();
+
+
+            foreach (DriveInfo info in allDrives)
+            {
+                disks.Add(new Disk(info.Name, info.DriveFormat, FormatBytes(info.TotalSize), FormatBytes(info.AvailableFreeSpace)));
+            }
+
+            foreach(var d in disks)
+            {
+                Console.WriteLine("Disk " + d.name + " ||| drive format : " + d.format + " ||| total size : " + d.totalSpace + " ||| avaible space : " + d.freeSpace);
+            }
+        }
+
+        public string FormatBytes(long bytes)
+        {
+            string[] suffix = { "B", "KB", "MB", "GB", "TB" };
+            int i;
+            double dblSByte = bytes;
+            for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+            {
+                dblSByte = bytes / 1024.0;
+            }
+
+            return String.Format("{0:0.##} {1}", dblSByte, suffix[i]);
+        }
+
 
 
         #region specificals functions about RAM
@@ -137,5 +170,23 @@ namespace SentinelSyncV1
         
     }
     
+    public class Disk
+    {
+        public string name;
+        public string format;
+        public string totalSpace;
+        public string freeSpace;
 
+        public Disk(string n, string f, string t, string l)
+        {
+            name = n;
+            format = f;
+            totalSpace = t;
+            freeSpace = l;
+        }
+        public override string ToString()
+        {
+            return name + " (" + format + ") " + freeSpace + " free / " + totalSpace;
+        }
+    }
 }

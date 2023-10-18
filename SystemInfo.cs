@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Net.NetworkInformation;
 
 namespace SentinelSyncV1
 {
@@ -102,6 +103,27 @@ namespace SentinelSyncV1
             return String.Format("{0:0.##} {1}", dblSByte, suffix[i]);
         }
 
+        public void RefreshNetworkInfos()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                return;
+            }
+            NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface ni in interfaces)
+            {
+                if (ni.GetIPv4Statistics().BytesSent > 0 )
+                {
+                    Console.WriteLine("bytes sent : " + ni.GetIPv4Statistics().BytesSent / 1000 + " KB");
+                }
+
+                if (ni.GetIPv4Statistics().BytesReceived > 0)
+                {
+                    Console.WriteLine("bytes received : " + ni.GetIPv4Statistics().BytesReceived / 1000 + " KB");
+                }
+            }
+        }
 
 
         #region specificals functions about RAM

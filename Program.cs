@@ -137,12 +137,13 @@ namespace SentinelSyncV1
         {
             GetAllSystemInfos();
             int choice = 0;
+            var sysInfo = new SystemInfo();
 
             Console.WriteLine("1 - show processor utilisation");
             Console.WriteLine("2 - show RAM");
             Console.WriteLine("3 - show PC temperature");
             Console.WriteLine("4 - show stockage infos");
-            Console.WriteLine("5 - connexion infos");
+            Console.WriteLine("5 - network infos");
 
             choice = outils.AskNumberBetween("enter a choice : ", 1, 5);
             switch (choice)
@@ -157,7 +158,7 @@ namespace SentinelSyncV1
                     ShowTemp();
                     break;
                 case 4:
-
+                    sysInfo.GetDrivesInfos();
                     break;
                 case 5:
 

@@ -84,7 +84,6 @@ namespace SentinelSyncV1
 
 
 
-
         static void GetAllSystemInfos()
         {
             var si = new SystemInfo();
@@ -133,6 +132,21 @@ namespace SentinelSyncV1
             }
         }
 
+        static void ShowNet()
+        {
+            var sysInfo = new SystemInfo();
+            while (true)
+            {
+                if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter)
+                {
+                    return;
+                }
+                Console.Write("(ENTER to stop) ");
+                sysInfo.RefreshNetworkInfos();
+                System.Threading.Thread.Sleep(500);
+            }
+        }
+
         static void Main(string[] args)
         {
             GetAllSystemInfos();
@@ -161,7 +175,7 @@ namespace SentinelSyncV1
                     sysInfo.GetDrivesInfos();
                     break;
                 case 5:
-
+                    ShowNet();
                     break;
 
             }
